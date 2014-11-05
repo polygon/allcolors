@@ -53,8 +53,6 @@ class CloseColors:
         
 
     def add_nextset(self, (x, y)):
-        # Next one could be uniqie, but this increases the chance
-        # of choosing a value that is requested more often
         _, coordslin = self.filtered_region((x, y), True)
         self.nextset = np.append(self.nextset, coordslin)
         
@@ -66,7 +64,7 @@ class CloseColors:
         self.nextset = self.nextset[self.nextset != coord]
         return (int(coord / 512), int(np.mod(coord, 512)))
         
-    # RGB as indexed integer from range 0-31
+    # RGB as indexed integer from range 0-63
     def seed(self, (x, y), (r, g, b)):
         coord = y*512 + x
         if not self.col_avail[r, g, b] or not self.coord_avail[coord]:
@@ -108,16 +106,6 @@ class CloseColors:
                 (r, g, b) = lma[sidx, :]
                 break
         
-#        (nr, ng, nb) = avgcol
-#        ref = np.array([[[[nr]]], [[[ng]]], [[[nb]]]])
-#            a = self.colors - ref
-#            b = a**2
-#            c = b.sum(0)
-#            self.dists = self.dists + c
-#        self.dists = self.dists + ((self.colors - ref)**2).sum(0)
-#        self.dists[self.col_avail == False] = np.inf
-#        best = np.unravel_index(np.argmin(self.dists), self.dists.shape)
-#        (r, g, b) = best
         self.col_avail[r, g, b] = False
         self.add_nextset((x, y))
         self.coord_avail[x*512 + y] = False
